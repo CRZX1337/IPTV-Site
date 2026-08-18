@@ -1,0 +1,19 @@
+{
+  "name": "hoodtv",
+  "version": "1.0.0",
+  "description": "HOODTV - standalone IPTV web platform with a single global Xtream stream",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "hls.js": "^1.6.2"
+  }
+}

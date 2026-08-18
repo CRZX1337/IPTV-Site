@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#06060a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="HOODTV" />
+  <title>HOODTV</title>
+  <link rel="stylesheet" href="/styles.css?v=4" />
+</head>
+<body>
+  <!-- Ambient liquid-glass background -->
+  <div class="bg" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <defs>
+          <linearGradient id="htv-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8b5cf6" />
+            <stop offset=".55" stop-color="#4f7cff" />
+            <stop offset="1" stop-color="#2dd4ff" />
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#htv-grad)" />
+        <path d="M16 12.5v15l13-7.5z" fill="#fff" />
+      </svg>
+      <span class="brand-name">HOOD<span class="brand-accent">TV</span></span>
+    </div>
+    <div class="topbar-right">
+      <span id="role-badge" class="role-badge hidden"></span>
+      <span id="conn-dot" class="conn-dot" title="Verbindungsstatus"></span>
+      <button id="logout-btn" class="btn btn-ghost hidden">Abmelden</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- LOGIN -->
+    <section id="login-view" class="view login-view hidden">
+      <div class="login-card glass">
+        <svg class="login-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#htv-grad)" />
+          <path d="M16 12.5v15l13-7.5z" fill="#fff" />
+        </svg>
+        <h1 class="login-title">Willkommen zurück</h1>
+        <p class="login-sub">Melde dich an, um HOODTV zu streamen.</p>
+
+        <div class="role-toggle" role="tablist">
+          <button class="role-btn" data-role="user" role="tab" aria-selected="false">User</button>
+          <button class="role-btn active" data-role="admin" role="tab" aria-selected="true">Admin</button>
+        </div>
+
+        <form id="login-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Passkey</span>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9V7a5 5 0 0 0-10 0v2m-2 0h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <input id="password-input" type="password" inputmode="text" autocapitalize="none"
+                     autocomplete="current-password" placeholder="••••••••••••••" required />
+            </div>
+          </label>
+          <button id="login-submit" type="submit" class="btn btn-primary full">
+            <span>Anmelden</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <p id="login-error" class="login-error" role="alert"></p>
+      </div>
+    </section>
+
+    <!-- APP -->
+    <section id="app-view" class="view app-view hidden">
+      <div class="layout">
+
+        <!-- LIVE -->
+        <section class="pane stage active" data-pane="live">
+          <div class="player-shell glass">
+            <video id="video" playsinline webkit-playsinline x-webkit-airplay="allow" controls preload="none"></video>
+            <div id="offline" class="offline">
+              <div class="offline-glyph">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+              </div>
+              <div class="offline-text">Kein Signal</div>
+              <div class="offline-sub">Der Stream ist derzeit offline</div>
+            </div>
+            <div class="player-top">
+              <span id="live-badge" class="live-badge hidden"><i></i>LIVE</span>
+              <span id="streaming-user" class="chip-glass"></span>
+            </div>
+            <div class="player-scrim" aria-hidden="true"></div>
+          </div>
+
+          <div class="now-bar glass">
+            <div class="now-main">
+              <div id="channel-title" class="channel-title">— Aus —</div>
+              <div id="channel-meta" class="channel-meta"></div>
+            </div>
+            <div class="now-actions">
+              <button id="stop-btn" class="btn btn-danger hidden">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></svg>
+                <span>Stopp</span>
+              </button>
+              <div id="lock-info" class="lock-info hidden"></div>
+            </div>
+          </div>
+
+          <div id="epg-panel" class="epg-panel glass hidden">
+            <div class="epg-now">
+              <span class="epg-label">Jetzt</span>
+              <span id="epg-now-title" class="epg-title">—</span>
+              <span id="epg-now-time" class="epg-time"></span>
+            </div>
+            <div id="epg-next" class="epg-next">—</div>
+          </div>
+        </section>
+
+        <!-- BROWSE -->
+        <section class="pane browser" data-pane="browse">
+          <div class="browser-head">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input id="search-input" type="search" inputmode="search" placeholder="Sender suchen…"
+                     autocomplete="off" spellcheck="false" />
+              <button id="search-clear" class="search-clear hidden" aria-label="Suche löschen">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <button id="fav-toggle" class="icon-btn" title="Favoriten anzeigen" aria-label="Favoriten anzeigen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8l-5.8 3.1 1.1-6.5L2.6 9.8l6.5-.9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div id="category-chips" class="category-chips"></div>
+          <div id="channel-list" class="channel-list"></div>
+        </section>
+
+        <!-- GUIDE -->
+        <section class="pane guide" data-pane="guide">
+          <div class="guide-head">
+            <div>
+              <div class="guide-kicker">Programm</div>
+              <div id="guide-channel" class="guide-title">Kein Sender aktiv</div>
+            </div>
+          </div>
+          <div id="guide-list" class="guide-list"></div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav id="tabbar" class="tabbar hidden" aria-label="Navigation">
+    <button class="tab active" data-pane="live" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="12.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m9.5 20.5 5-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>Live</span>
+    </button>
+    <button class="tab" data-pane="browse" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="4" width="7" height="7" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="13" width="7" height="7" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="13" width="7" height="7" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      <span>Sender</span>
+    </button>
+    <button class="tab" data-pane="guide" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Guide</span>
+    </button>
+  </nav>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="/vendor/hls.min.js"></script>
+  <script src="/app.js?v=4"></script>
+</body>
+</html>
